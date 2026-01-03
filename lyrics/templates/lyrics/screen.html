@@ -1,0 +1,283 @@
+{% extends 'lyrics/base.html' %}
+
+{% block title %}Écran Projecteur - Louange Echo{% endblock %}
+
+{% block nav_menu %}
+<!-- Pas de menu sur l'écran projecteur -->
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+    body {
+        background-color: #000;
+        color: #fff;
+        font-family: 'Arial', 'Helvetica', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+    }
+    .screen-container {
+        text-align: center;
+        width: 100%;
+        max-width: 1600px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+    }
+    .song-title {
+        font-size: clamp(40px, 5vw, 80px);
+        font-weight: 700;
+        margin-bottom: 4vh;
+        color: #fff;
+        text-shadow: 3px 3px 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.5);
+        letter-spacing: 2px;
+    }
+    .lyrics-window {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 55vh;
+        padding: 30px 40px;
+    }
+    .lyric-line {
+        margin: 3vh 0;
+        padding: 2vh 3vw;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.95), 0 0 15px rgba(0,0,0,0.6);
+        font-weight: 500;
+        width: 100%;
+        max-width: 92%;
+        text-align: center;
+        word-wrap: break-word;
+        letter-spacing: 0.5px;
+    }
+    .lyric-line.current {
+        color: #fff;
+        font-size: clamp(56px, 7vw, 140px);
+        font-weight: 700;
+        line-height: 1.4;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .lyric-line.next {
+        color: #e0e0e0;
+        font-size: clamp(42px, 5.5vw, 110px);
+        opacity: 0.85;
+        font-weight: 500;
+        line-height: 1.5;
+        margin-top: 2vh;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* If multiple current lines (split long line), make them all prominent */
+    .lyric-line.current + .lyric-line.current {
+        margin-top: 1vh;
+    }
+    .status {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        font-size: 14px;
+        color: #888;
+        background: rgba(0,0,0,0.3);
+        padding: 8px 12px;
+        border-radius: 6px;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+    .no-active {
+        font-size: 5vw;
+        color: #666;
+        text-align: center;
+        font-weight: 300;
+    }
+    .loading {
+        font-size: 4vw;
+        color: #666;
+        font-weight: 300;
+    }
+    .slide-number {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-size: clamp(18px, 2vw, 28px);
+        color: #aaa;
+        background: rgba(0,0,0,0.3);
+        padding: 10px 16px;
+        border-radius: 8px;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+        font-weight: 600;
+    }
+    /* Hide status and slide number when not needed */
+    .hidden {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        body {
+            padding: 20px;
+        }
+        
+        .screen-container {
+            padding: 20px;
+        }
+        
+        .song-title {
+            font-size: clamp(28px, 6vw, 48px);
+            margin-bottom: 3vh;
+        }
+        
+        .lyrics-window {
+            padding: 20px;
+            min-height: 50vh;
+        }
+        
+        .lyric-line.current {
+            font-size: clamp(36px, 8vw, 80px);
+        }
+        
+        .lyric-line.next {
+            font-size: clamp(28px, 6vw, 60px);
+        }
+        
+        .status {
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+        
+        .slide-number {
+            bottom: 10px;
+            right: 10px;
+            font-size: clamp(14px, 2.5vw, 20px);
+            padding: 8px 12px;
+        }
+        
+        div[style*="position: fixed"][style*="bottom: 20px"][style*="left: 20px"] {
+            font-size: 11px !important;
+            padding: 6px 10px !important;
+            bottom: 10px !important;
+            left: 10px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        body {
+            padding: 16px;
+        }
+        
+        .lyric-line.current {
+            font-size: clamp(28px, 7vw, 60px);
+            line-height: 1.3;
+        }
+        
+        .lyric-line.next {
+            font-size: clamp(22px, 5vw, 48px);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="status" id="status">Chargement...</div>
+<div class="screen-container">
+    <div id="songTitle" class="song-title"></div>
+    <div id="lyricsWindow" class="lyrics-window">
+        <div class="loading">En attente du début du chant...</div>
+    </div>
+</div>
+<div class="slide-number" id="slideNumber"></div>
+<div style="position: fixed; bottom: 20px; left: 20px; font-size: 14px; color: #888; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 6px; z-index: 1000; backdrop-filter: blur(5px);">
+    📺 Écran Projecteur - Mode Plein Écran (F11)
+</div>
+
+<script>
+    let lastUpdateTime = null;
+    
+    function updateScreen() {
+        fetch('/api/state/')
+            .then(response => response.json())
+            .then(data => {
+                const statusEl = document.getElementById('status');
+                const titleEl = document.getElementById('songTitle');
+                const lyricsEl = document.getElementById('lyricsWindow');
+                
+                // Update status
+                const now = new Date();
+                statusEl.textContent = `Updated: ${now.toLocaleTimeString()}`;
+                
+                if (!data.active || !data.song) {
+                    titleEl.textContent = '';
+                    lyricsEl.innerHTML = '<div class="no-active">Aucun chant actif</div>';
+                    return;
+                }
+                
+                // Update song title
+                titleEl.textContent = data.song.title;
+                
+                // Update lyrics (PowerPoint-style: current slide + next slide preview)
+                // Long lines are automatically split into multiple virtual slides
+                if (data.lines && data.lines.length > 0) {
+                    let html = '';
+                    
+                    // First line is always the current slide
+                    if (data.lines[0]) {
+                        html += `<div class="lyric-line current">${escapeHtml(data.lines[0].trim())}</div>`;
+                    }
+                    
+                    // Second line (if exists) is the next slide preview
+                    if (data.lines[1]) {
+                        html += `<div class="lyric-line next">${escapeHtml(data.lines[1].trim())}</div>`;
+                    }
+                    
+                    lyricsEl.innerHTML = html || '<div class="no-active">Aucune parole à afficher</div>';
+                    
+                    // Update slide number (show original line number if available)
+                    const slideNumber = document.getElementById('slideNumber');
+                    if (slideNumber && data.total > 0) {
+                        if (data.total_original_lines) {
+                            slideNumber.textContent = `${data.index + 1} / ${data.total} (Ligne ${(data.original_line_index || 0) + 1} / ${data.total_original_lines})`;
+                        } else {
+                            slideNumber.textContent = `${data.index + 1} / ${data.total}`;
+                        }
+                    }
+                } else {
+                    lyricsEl.innerHTML = '<div class="no-active">Aucune parole à afficher</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching state:', error);
+                document.getElementById('status').textContent = 'Erreur de chargement';
+            });
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Update immediately, then every 800ms
+    updateScreen();
+    setInterval(updateScreen, 800);
+</script>
+{% endblock %}

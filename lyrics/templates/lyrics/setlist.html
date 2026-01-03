@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Louange Echo – Concert de Chants</title>
+    {% load static %}
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --background: #fbfbfd;
+            --foreground: #101828;
+            --border: #00000014;
+            --input: #ffffff;
+            --primary: #2563eb;
+            --primary-foreground: #ffffff;
+            --secondary: #f1f5f9;
+            --secondary-foreground: #0f172a;
+            --muted: #f8fafc;
+            --muted-foreground: #94a3b8;
+            --success: #16a34a;
+            --success-foreground: #ffffff;
+            --accent: #f59e0b;
+            --accent-foreground: #0f172a;
+            --destructive: #dc2626;
+            --destructive-foreground: #ffffff;
+            --warning: #f97316;
+            --warning-foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --sidebar: #f8faff;
+            --sidebar-foreground: #0f172a;
+            --sidebar-primary: #e6f0ff;
+            --sidebar-primary-foreground: #1e3a8a;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --font-family-body: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: var(--font-family-body);
+        }
+
+        .page-root {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px 24px 64px;
+        }
+
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(
+                    circle at 20% 30%,
+                    rgba(37, 99, 235, 0.1),
+                    transparent 50%
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(139, 92, 246, 0.08),
+                    transparent 50%
+                );
+            z-index: 1;
+        }
+
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-slider img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            filter: brightness(0.5) blur(2px);
+        }
+
+        .hero-slider img.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 100px 24px 80px;
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        .hero-concert-title {
+            margin-bottom: 50px;
+            width: 100%;
+        }
+
+        .hero-choir-name {
+            font-size: 28px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+        }
+
+        .hero-echo-name {
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 800;
+            color: #FFD700;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+            text-shadow: 
+                0 2px 20px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.4);
+            line-height: 1.2;
+        }
+
+        .hero-echo-name .echo-line {
+            display: inline;
+        }
+
+        .hero-echo-name .echo-line:not(:last-child)::after {
+            content: ' ';
+        }
+
+        .hero-presents {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 24px;
+            text-transform: lowercase;
+            font-style: italic;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.05em;
+        }
+
+        .hero-main-title {
+            font-size: clamp(56px, 10vw, 84px);
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+            text-shadow: 
+                0 3px 25px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.2);
+            line-height: 1.1;
+        }
+
+        .hero-concert-type {
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px 16px 40px;
+            }
+            
+            .hero {
+                min-height: auto;
+            }
+            
+            .hero-inner {
+                padding: 60px 20px 50px;
+            }
+            
+            .hero-concert-title {
+                margin-bottom: 40px;
+            }
+            
+            .hero-choir-name {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .hero-echo-name {
+                font-size: 42px;
+                margin-bottom: 14px;
+            }
+            
+            .hero-presents {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            
+            .hero-main-title {
+                font-size: 48px;
+                margin-bottom: 14px;
+            }
+            
+            .hero-concert-type {
+                font-size: 16px;
+            }
+            
+            .hero-countdown-row {
+                margin-bottom: 40px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .hero-countdown-row {
+                gap: 6px;
+                justify-content: center;
+                flex-wrap: nowrap;
+                padding: 0 10px;
+            }
+            
+            .hero-countdown-box {
+                min-width: 0;
+                flex: 1 1 0;
+                padding: 10px 6px;
+                max-width: calc(25% - 5px);
+            }
+            
+            .hero-countdown-number {
+                font-size: 22px;
+            }
+            
+            .hero-countdown-label {
+                font-size: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-inner {
+                padding: 30px 12px;
+            }
+            
+            .hero-choir-name {
+                font-size: 18px;
+            }
+            
+            .hero-echo-name {
+                font-size: 36px;
+            }
+            
+            .hero-main-title {
+                font-size: 40px;
+            }
+            
+            .hero-countdown-row {
+                gap: 4px;
+                padding: 0 8px;
+            }
+            
+            .hero-countdown-box {
+                min-width: 0;
+                flex: 1 1 0;
+                padding: 8px 4px;
+                max-width: calc(25% - 3px);
+            }
+            
+            .hero-countdown-number {
+                font-size: 18px;
+            }
+            
+            .hero-countdown-label {
+                font-size: 9px;
+            }
+        }
+
+        .hero-pre {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hero-badge {
+            padding: 4px 12px;
+            border-radius: 999px;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #ffffff;
+            line-height: 1.1;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 520px;
+            margin-bottom: 32px;
+            line-height: 1.7;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-countdown-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 48px;
+            flex-wrap: nowrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .hero-countdown-box {
+            flex: 0 0 auto;
+            min-width: 80px;
+            padding: 16px 14px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .hero-countdown-box:hover {
+            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-countdown-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-countdown-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+
+        .hero-action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 0;
+            width: 100%;
+            max-width: 320px;
+            align-items: center;
+        }
+
+        .hero-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 24px;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            border: 2px solid transparent;
+        }
+
+        .hero-action-btn:hover {
+            background-color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .hero-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .hero-btn-download {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+        }
+
+        .hero-btn-songs {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+        }
+
+        @media (max-width: 768px) {
+            .hero-action-buttons {
+                max-width: 100%;
+            }
+
+            .hero-action-btn {
+                font-size: 15px;
+                padding: 14px 20px;
+            }
+        }
+
+        /* Sections */
+        .section {
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        .section-muted {
+            background-color: var(--muted);
+        }
+
+        .section-header {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--muted-foreground);
+            max-width: 560px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-card {
+            background-color: var(--card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 16px 16px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+
+        .menu-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .menu-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-card-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-md);
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .menu-card-text {
+            font-size: 17px;
+            color: var(--muted-foreground);
+            line-height: 1.6;
+        }
+
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--border);
+            background-color: var(--card);
+            margin-top: auto;
+        }
+
+        .footer-inner {
+            padding-top: 16px;
+            padding-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--muted-foreground);
+            flex-wrap: wrap;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 14px;
+            white-space: nowrap;
+        }
+
+        .footer-link {
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--muted-foreground);
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--foreground);
+        }
+
+        /* Sponsors Section */
+        .sponsors-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sponsors-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.05), transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.05), transparent 50%);
+            pointer-events: none;
+        }
+
+        .sponsors-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sponsors-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .sponsors-header p {
+            font-size: 17px;
+            color: var(--muted-foreground);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .sponsors-slider {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 30px 0;
+            mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                black 10%,
+                black 90%,
+                transparent 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                black 10%,
+                black 90%,
+                transparent 100%
+            );
+        }
+
+        .sponsors-track {
+            display: flex;
+            gap: 80px;
+            animation: scroll-sponsors 40s linear infinite;
+            will-change: transform;
+            align-items: center;
+        }
+
+        .sponsors-track:hover {
+            animation-play-state: paused;
+        }
+
+        .partner-item {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 32px;
+            background-color: var(--card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            min-width: 200px;
+            height: 80px;
+        }
+
+        .partner-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .partner-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--foreground);
+            text-align: center;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        .partner-item:hover .partner-name {
+            color: var(--primary);
+        }
+
+        @keyframes scroll-sponsors {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sponsors-section {
+                padding: 40px 0;
+            }
+            
+            .sponsors-header {
+                padding: 0 20px;
+            }
+            
+            .sponsors-header h2 {
+                font-size: 24px;
+            }
+            
+            .sponsors-header p {
+                font-size: 14px;
+            }
+            
+            .sponsors-slider {
+                padding: 0 20px;
+            }
+            
+            .partner-item {
+                min-width: 160px;
+                height: 70px;
+                padding: 16px 24px;
+            }
+            
+            .partner-name {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sponsors-section {
+                padding: 32px 0;
+            }
+            
+            .sponsors-header h2 {
+                font-size: 22px;
+            }
+            
+            .partner-item {
+                min-width: 140px;
+                height: 65px;
+                padding: 14px 20px;
+            }
+            
+            .partner-name {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-root">
+        <!-- Section 1: Hero with countdown + gallery -->
+        <section class="hero">
+            {% if slider_images %}
+            <div class="hero-slider">
+                {% for img in slider_images %}
+                <img src="{% static img %}" alt="Chorale Echo du Ciel" {% if forloop.first %}class="active"{% endif %} />
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="container hero-inner">
+                <div class="hero-concert-title">
+                    <div class="hero-choir-name">CHORALE</div>
+                    <div class="hero-echo-name">
+                        <span class="echo-line">ECHO</span>
+                        <span class="echo-line">DU</span>
+                        <span class="echo-line">CIEL</span>
+                    </div>
+                    <div class="hero-presents">présente</div>
+                    <div class="hero-main-title">WOE NYE</div>
+                    <div class="hero-concert-type">Concert de chants Classique & Variétés</div>
+                </div>
+
+
+                <div class="hero-countdown-row">
+                    <div class="hero-countdown-box">
+                        <div class="hero-countdown-number" id="countdown-days">--</div>
+                        <div class="hero-countdown-label">Jours</div>
+                    </div>
+                    <div class="hero-countdown-box">
+                        <div class="hero-countdown-number" id="countdown-hours">--</div>
+                        <div class="hero-countdown-label">Heures</div>
+                    </div>
+                    <div class="hero-countdown-box">
+                        <div class="hero-countdown-number" id="countdown-minutes">--</div>
+                        <div class="hero-countdown-label">Minutes</div>
+                    </div>
+                    <div class="hero-countdown-box">
+                        <div class="hero-countdown-number" id="countdown-seconds">--</div>
+                        <div class="hero-countdown-label">Secondes</div>
+                    </div>
+                </div>
+
+                <div class="hero-action-buttons">
+                    {% if program_image %}
+                    <a href="{% url 'download_program' %}" class="hero-action-btn hero-btn-download">
+                        <iconify-icon icon="lucide:download" style="font-size: 20px;"></iconify-icon>
+                        Télécharger le Programme
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'songs_list' %}" class="hero-action-btn hero-btn-songs">
+                        <iconify-icon icon="lucide:music-2" style="font-size: 20px;"></iconify-icon>
+                        Liste des Chants
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sponsors Section -->
+        <section class="sponsors-section">
+            <div class="container">
+                <div class="sponsors-header">
+                    <h2>Nos Sponsors</h2>
+                    <p>Merci à nos généreux sponsors pour leur soutien</p>
+                </div>
+                <div class="sponsors-slider">
+                    <div class="sponsors-track">
+                        {% for partner in partners %}
+                        <div class="partner-item">
+                            <div class="partner-name">{{ partner.name }}</div>
+                        </div>
+                        {% endfor %}
+                        <!-- Duplicate for seamless loop -->
+                        {% for partner in partners %}
+                        <div class="partner-item">
+                            <div class="partner-name">{{ partner.name }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Countdown to January 3rd, 2026 at 5pm
+        function updateCountdown() {
+            const now = new Date();
+            // Set target date: January 3rd, 2026 at 5pm
+            const concertDate = new Date(2026, 0, 3, 17, 0, 0, 0); // Month is 0-indexed (0 = January)
+            
+            const diff = concertDate - now;
+            
+            if (diff <= 0) {
+                // Countdown has passed
+                document.getElementById('countdown-days').textContent = '00';
+                document.getElementById('countdown-hours').textContent = '00';
+                document.getElementById('countdown-minutes').textContent = '00';
+                document.getElementById('countdown-seconds').textContent = '00';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
+            document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
+        }
+        
+        // Update countdown immediately and then every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Image slider functionality
+        {% if slider_images %}
+        (function() {
+            const heroImages = document.querySelectorAll('.hero-slider img');
+            let currentIndex = 0;
+            
+            // Wait for images to load before starting rotation
+            let imagesLoaded = 0;
+            const totalImages = heroImages.length;
+            
+            heroImages.forEach((img) => {
+                if (img.complete) {
+                    imagesLoaded++;
+                } else {
+                    img.addEventListener('load', function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages && totalImages > 1) {
+                            startRotation();
+                        }
+                    });
+                }
+            });
+            
+            // If all images are already loaded, start rotation
+            if (imagesLoaded === totalImages && totalImages > 1) {
+                startRotation();
+            }
+            
+            function startRotation() {
+                // Rotate images every 4 seconds (2s fade + 2s display)
+                setInterval(rotateImages, 4000);
+            }
+            
+            function rotateImages() {
+                if (heroImages.length > 1) {
+                    // Remove active class from current image
+                    heroImages[currentIndex].classList.remove('active');
+                    
+                    // Move to next image
+                    currentIndex = (currentIndex + 1) % heroImages.length;
+                    
+                    // Add active class to new image
+                    heroImages[currentIndex].classList.add('active');
+                }
+            }
+        })();
+        {% endif %}
+    </script>
+</body>
+</html>

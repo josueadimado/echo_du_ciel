@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liste des Chants - Louange Echo</title>
+    {% load static %}
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    />
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --background: #fbfbfd;
+            --foreground: #101828;
+            --border: #00000014;
+            --primary: #2563eb;
+            --primary-foreground: #ffffff;
+            --secondary: #f1f5f9;
+            --secondary-foreground: #0f172a;
+            --muted: #f8fafc;
+            --muted-foreground: #94a3b8;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --radius-2xl: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .page-container {
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            padding: 8px 16px;
+            border-radius: var(--radius-lg);
+            background-color: rgba(37, 99, 235, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: rgba(37, 99, 235, 0.15);
+            transform: translateX(-4px);
+        }
+
+        .page-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: clamp(16px, 2vw, 18px);
+            color: var(--muted-foreground);
+            font-weight: 400;
+        }
+
+        /* Songs Grid */
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 0 20px;
+        }
+
+        .song-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            padding: 28px 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .song-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #3b82f6);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .song-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary);
+        }
+
+        .song-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .song-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            color: var(--primary-foreground);
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .song-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 12px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .song-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--muted-foreground);
+            margin-top: auto;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .song-info-icon {
+            font-size: 16px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--card);
+            border-radius: var(--radius-2xl);
+            border: 1px solid var(--border);
+            margin: 0 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 12px;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            color: var(--muted-foreground);
+            margin-bottom: 24px;
+        }
+
+        .empty-state-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            background-color: rgba(37, 99, 235, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .empty-state-link:hover {
+            background-color: rgba(37, 99, 235, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 24px 0;
+            }
+
+            .page-header {
+                margin-bottom: 32px;
+            }
+
+            .songs-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 0 16px;
+            }
+
+            .song-card {
+                padding: 24px 20px;
+            }
+
+            .song-number {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .song-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .songs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="container">
+            <div class="page-header">
+                <a href="{% url 'setlist' %}" class="back-link">
+                    <iconify-icon icon="lucide:arrow-left" style="font-size: 18px;"></iconify-icon>
+                    Retour à l'accueil
+                </a>
+                
+                <h1 class="page-title">Liste des Chants</h1>
+                <p class="page-subtitle">Cliquez sur un chant pour voir les paroles complètes</p>
+            </div>
+
+            {% if songs %}
+                <div class="songs-grid">
+                    {% for song in songs %}
+                    <a href="{% url 'song_detail' song.slug %}" class="song-card">
+                        <div class="song-number">{{ forloop.counter }}</div>
+                        <div class="song-title">{{ song.title }}</div>
+                        <div class="song-info">
+                            <iconify-icon icon="lucide:music" class="song-info-icon"></iconify-icon>
+                            <span>{{ song.lines.count }} lignes</span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎵</div>
+                    <h2 class="empty-state-title">Aucun chant disponible</h2>
+                    <p class="empty-state-text">Il n'y a pas encore de chants dans la liste.</p>
+                    <a href="/admin/" class="empty-state-link">
+                        <iconify-icon icon="lucide:plus" style="font-size: 18px;"></iconify-icon>
+                        Ajouter des chants dans l'administration
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

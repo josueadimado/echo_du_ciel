@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ song.title }} - Louange Echo</title>
+    {% load static %}
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    />
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+
+    <style>
+        :root {
+            --background: #fbfbfd;
+            --foreground: #101828;
+            --border: #00000014;
+            --primary: #2563eb;
+            --primary-foreground: #ffffff;
+            --secondary: #f1f5f9;
+            --secondary-foreground: #0f172a;
+            --muted: #f8fafc;
+            --muted-foreground: #94a3b8;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+            --radius-2xl: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .page-container {
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background-color: var(--card);
+            color: var(--foreground);
+            text-decoration: none;
+            border-radius: var(--radius-xl);
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .nav-btn-primary {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+
+        .nav-btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Header Section */
+        .song-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            color: var(--primary-foreground);
+            padding: 48px 32px;
+            border-radius: var(--radius-2xl);
+            text-align: center;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .song-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .song-meta {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .controls-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted-foreground);
+        }
+
+        .font-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .font-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary);
+            color: var(--foreground);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .font-btn:hover {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .font-btn:active {
+            transform: scale(0.95);
+        }
+
+        .font-reset {
+            padding: 0 16px;
+            width: auto;
+            font-size: 14px;
+        }
+
+        /* Lyrics Container */
+        .lyrics-wrapper {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            padding: 40px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .lyrics-container {
+            font-size: 20px;
+            line-height: 1.8;
+            color: var(--foreground);
+        }
+
+        .lyric-line {
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            border-left: 3px solid transparent;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            background-color: transparent;
+        }
+
+        .lyric-line:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            border-left-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .lyric-line:empty {
+            margin-bottom: 32px;
+            padding: 0;
+            border: none;
+            position: relative;
+        }
+
+        .lyric-line:empty::after {
+            content: '♪';
+            color: var(--muted-foreground);
+            font-size: 32px;
+            display: block;
+            text-align: center;
+            opacity: 0.3;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted-foreground);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 20px 0;
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .song-header {
+                padding: 32px 20px;
+                border-radius: 0;
+                margin-left: -16px;
+                margin-right: -16px;
+                width: calc(100% + 32px);
+            }
+
+            .controls-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .font-controls {
+                justify-content: center;
+            }
+
+            .lyrics-wrapper {
+                padding: 24px 20px;
+                border-radius: var(--radius-xl);
+            }
+
+            .lyrics-container {
+                font-size: 18px;
+            }
+
+            .lyric-line {
+                padding: 12px 16px;
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .song-title {
+                font-size: 24px;
+            }
+
+            .lyrics-container {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="container">
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <a href="{% url 'songs_list' %}" class="nav-btn nav-btn-primary">
+                    <iconify-icon icon="lucide:arrow-left" style="font-size: 18px;"></iconify-icon>
+                    Liste des Chants
+                </a>
+                <a href="{% url 'setlist' %}" class="nav-btn">
+                    <iconify-icon icon="lucide:home" style="font-size: 18px;"></iconify-icon>
+                    Accueil
+                </a>
+            </div>
+
+            <!-- Song Header -->
+            <div class="song-header">
+                <h1 class="song-title">{{ song.title }}</h1>
+                <div class="song-meta">{{ lines.count }} lignes</div>
+            </div>
+
+            <!-- Font Controls -->
+            <div class="controls-section">
+                <div class="controls-label">Taille du texte</div>
+                <div class="font-controls">
+                    <button class="font-btn" onclick="changeFontSize(-2)" title="Réduire">
+                        <iconify-icon icon="lucide:minus" style="font-size: 18px;"></iconify-icon>
+                    </button>
+                    <button class="font-btn" onclick="changeFontSize(2)" title="Augmenter">
+                        <iconify-icon icon="lucide:plus" style="font-size: 18px;"></iconify-icon>
+                    </button>
+                    <button class="font-btn font-reset" onclick="resetFontSize()" title="Réinitialiser">
+                        Réinitialiser
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lyrics -->
+            <div class="lyrics-wrapper">
+                {% if lines %}
+                    <div class="lyrics-container" id="lyricsContainer">
+                        {% for line in lines %}
+                        <div class="lyric-line">{{ line.text }}</div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎵</div>
+                        <p class="empty-state-text">Aucune parole disponible pour ce chant.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFontSize = 20;
+        
+        function changeFontSize(delta) {
+            const container = document.getElementById('lyricsContainer');
+            if (!container) return;
+            
+            currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta));
+            container.style.fontSize = currentFontSize + 'px';
+            
+            // Save to localStorage
+            localStorage.setItem('lyricsFontSize', currentFontSize);
+        }
+        
+        function resetFontSize() {
+            const container = document.getElementById('lyricsContainer');
+            if (!container) return;
+            
+            currentFontSize = 20;
+            container.style.fontSize = currentFontSize + 'px';
+            
+            // Save to localStorage
+            localStorage.setItem('lyricsFontSize', currentFontSize);
+        }
+        
+        // Load saved font size on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedSize = localStorage.getItem('lyricsFontSize');
+            if (savedSize) {
+                currentFontSize = parseInt(savedSize);
+                const container = document.getElementById('lyricsContainer');
+                if (container) {
+                    container.style.fontSize = currentFontSize + 'px';
+                }
+            }
+            
+            // Animation d'apparition des lignes
+            const lines = document.querySelectorAll('.lyric-line');
+            lines.forEach((line, index) => {
+                line.style.opacity = '0';
+                line.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    line.style.transition = 'opacity 0.3s, transform 0.3s';
+                    line.style.opacity = '1';
+                    line.style.transform = 'translateY(0)';
+                }, index * 20);
+            });
+        });
+    </script>
+</body>
+</html>

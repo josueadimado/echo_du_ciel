@@ -1,0 +1,538 @@
+{% extends 'lyrics/base.html' %}
+
+{% block title %}Panneau de Contrôle - Louange Echo{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+    
+    @media (max-width: 768px) {
+        body {
+            padding: 12px;
+            max-width: 100%;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        body {
+            padding: 8px;
+        }
+    }
+    .control-panel {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .section {
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #eee;
+    }
+    .section:last-child {
+        border-bottom: none;
+    }
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 15px;
+    }
+    .song-selector {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    select {
+        flex: 1;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        background: white;
+    }
+    button {
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+    .btn-success {
+        background: #27ae60;
+        color: white;
+    }
+    .btn-success:hover {
+        background: #229954;
+    }
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+    .btn-danger:hover {
+        background: #c0392b;
+    }
+    .btn-large {
+        padding: 20px 40px;
+        font-size: 20px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .current-status {
+        background: #ecf0f1;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+    .current-status strong {
+        color: #2c3e50;
+    }
+    .status-inactive {
+        color: #95a5a6;
+    }
+    .status-active {
+        color: #27ae60;
+    }
+    .message {
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 4px;
+        display: none;
+    }
+    .message.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .message.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .lyrics-preview {
+        max-height: 400px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+    .lyrics-preview.hidden {
+        display: none;
+    }
+    .lyric-item {
+        padding: 8px 12px;
+        margin: 2px 0;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .lyric-item.current-line {
+        background: #d4edda;
+        border-left: 4px solid #27ae60;
+        font-weight: 600;
+        color: #155724;
+    }
+    .lyric-item.past-line {
+        color: #6c757d;
+    }
+    .lyric-item.future-line {
+        color: #495057;
+    }
+    .lyrics-preview::-webkit-scrollbar {
+        width: 8px;
+    }
+    .lyrics-preview::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    .lyrics-preview::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+    .lyrics-preview::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    
+    @media (max-width: 768px) {
+        .control-panel {
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+        }
+        
+        .song-selector {
+            flex-direction: column;
+        }
+        
+        select {
+            width: 100%;
+            font-size: 15px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 15px;
+        }
+        
+        .btn-large {
+            padding: 16px 24px;
+            font-size: 18px;
+        }
+        
+        .current-status {
+            padding: 12px;
+            font-size: 14px;
+        }
+        
+        .lyrics-preview {
+            max-height: 300px;
+            padding: 12px;
+        }
+        
+        .lyric-item {
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .control-panel {
+            padding: 16px;
+        }
+        
+        h1 {
+            font-size: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+        }
+        
+        select {
+            font-size: 14px;
+            padding: 10px;
+        }
+        
+        button {
+            padding: 12px 18px;
+            font-size: 14px;
+        }
+        
+        .btn-large {
+            padding: 14px 20px;
+            font-size: 16px;
+        }
+        
+        .current-status {
+            font-size: 13px;
+        }
+        
+        .lyrics-preview {
+            max-height: 250px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="control-panel">
+    <h1>🎵 Panneau de Contrôle</h1>
+    <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px; font-size: 0.9em;">
+        🎛️ Page pour l'opérateur - Contrôlez les paroles affichées sur l'écran projecteur
+    </p>
+    
+    <div class="section">
+        <div class="section-title">État Actuel</div>
+        <div class="current-status" id="currentStatus">
+            {% if live_state.active_song %}
+                <strong>Chant actif :</strong> <span class="status-active">{{ live_state.active_song.title }}</span><br>
+                <strong>Ligne actuelle :</strong> {{ live_state.active_index|add:1 }} / {{ live_state.active_song.lines.count }}
+            {% else %}
+                <span class="status-inactive">Aucun chant actif</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Sélectionner un Chant</div>
+        <div class="song-selector">
+            <select id="songSelect">
+                <option value="">-- Choisissez un chant --</option>
+                {% for song in songs %}
+                <option value="{{ song.id }}" {% if live_state.active_song.id == song.id %}selected{% endif %}>
+                    {{ song.title }}
+                </option>
+                {% endfor %}
+            </select>
+            <button class="btn-primary" onclick="setActiveSong()">Mettre en Direct</button>
+        </div>
+        <div id="songMessage" class="message"></div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Naviguer dans les Paroles</div>
+        <button class="btn-danger btn-large" onclick="prevLine()">◀ Précédent</button>
+        <button class="btn-success btn-large" onclick="nextLine()">Suivant ▶</button>
+        <div id="navMessage" class="message"></div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Paroles Complètes</div>
+        <div id="lyricsPreview" class="lyrics-preview hidden">
+            <div id="lyricsContent"></div>
+        </div>
+        <div id="noLyricsMessage" style="text-align: center; color: #6c757d; padding: 20px;">
+            Sélectionnez un chant et mettez-le en direct pour voir les paroles
+        </div>
+    </div>
+</div>
+
+<script>
+    function showMessage(elementId, message, isSuccess) {
+        const msgEl = document.getElementById(elementId);
+        msgEl.textContent = message;
+        msgEl.className = 'message ' + (isSuccess ? 'success' : 'error');
+        msgEl.style.display = 'block';
+        setTimeout(() => {
+            msgEl.style.display = 'none';
+        }, 3000);
+    }
+    
+    function updateStatus() {
+        fetch('/api/state/')
+            .then(response => response.json())
+            .then(data => {
+                const statusEl = document.getElementById('currentStatus');
+                if (data.active && data.song) {
+                    const totalDisplay = data.total_original_lines 
+                        ? `${data.index + 1} / ${data.total} slides (Ligne ${(data.original_line_index || 0) + 1} / ${data.total_original_lines})`
+                        : `${data.index + 1} / ${data.total}`;
+                    statusEl.innerHTML = `
+                        <strong>Chant actif :</strong> <span class="status-active">${data.song.title}</span><br>
+                        <strong>Slide actuel :</strong> ${totalDisplay}
+                    `;
+                    // Charger et afficher les paroles complètes
+                    loadFullLyrics(data.song.slug, data.index);
+                } else {
+                    statusEl.innerHTML = '<span class="status-inactive">Aucun chant actif</span>';
+                    hideLyricsPreview();
+                }
+            })
+            .catch(error => console.error('Error updating status:', error));
+    }
+    
+    function loadFullLyrics(songSlug, currentIndex) {
+        // Récupérer l'ID du chant depuis le select
+        const songSelect = document.getElementById('songSelect');
+        const songId = songSelect.value;
+        
+        if (!songId) {
+            hideLyricsPreview();
+            return;
+        }
+        
+        // Charger toutes les paroles via l'API
+        fetch(`/api/song/${songId}/lyrics/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.lines && data.lines.length > 0) {
+                    displayLyrics(data.lines, currentIndex);
+                } else {
+                    hideLyricsPreview();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading lyrics:', error);
+                hideLyricsPreview();
+            });
+    }
+    
+    function displayLyrics(lines, currentIndex) {
+        const lyricsContent = document.getElementById('lyricsContent');
+        const lyricsPreview = document.getElementById('lyricsPreview');
+        const noLyricsMessage = document.getElementById('noLyricsMessage');
+        
+        if (lines.length === 0) {
+            hideLyricsPreview();
+            return;
+        }
+        
+        lyricsContent.innerHTML = '';
+        noLyricsMessage.style.display = 'none';
+        lyricsPreview.classList.remove('hidden');
+        
+        // Trier les lignes par ordre
+        const sortedLines = lines.sort((a, b) => a.order - b.order);
+        
+        sortedLines.forEach((line, index) => {
+            const div = document.createElement('div');
+            div.className = 'lyric-item';
+            
+            if (index === currentIndex) {
+                div.className += ' current-line';
+            } else if (index < currentIndex) {
+                div.className += ' past-line';
+            } else {
+                div.className += ' future-line';
+            }
+            
+            div.textContent = line.text.trim();
+            lyricsContent.appendChild(div);
+        });
+        
+        // Faire défiler jusqu'à la ligne actuelle
+        setTimeout(() => {
+            const currentLineEl = lyricsContent.querySelector('.current-line');
+            if (currentLineEl) {
+                currentLineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+    }
+    
+    function hideLyricsPreview() {
+        const lyricsPreview = document.getElementById('lyricsPreview');
+        const noLyricsMessage = document.getElementById('noLyricsMessage');
+        lyricsPreview.classList.add('hidden');
+        noLyricsMessage.style.display = 'block';
+    }
+    
+    function setActiveSong() {
+        const songId = document.getElementById('songSelect').value;
+        console.log('Tentative de mise en direct du chant ID:', songId);
+        
+        if (!songId) {
+            showMessage('songMessage', 'Veuillez d\'abord sélectionner un chant', false);
+            return;
+        }
+        
+        console.log('Envoi de la requête à:', `/control/set-song/${songId}/`);
+        fetch(`/control/set-song/${songId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') || ''
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Réponse reçue:', data);
+            if (data.success) {
+                showMessage('songMessage', '✅ Chant mis en direct avec succès !', true);
+                updateStatus();
+                // Forcer la mise à jour immédiate et charger les paroles
+                setTimeout(() => {
+                    updateStatus();
+                }, 500);
+            } else {
+                showMessage('songMessage', '❌ ' + (data.message || 'Erreur lors de la sélection du chant'), false);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur détaillée:', error);
+            showMessage('songMessage', 'Erreur : ' + error.message, false);
+        });
+    }
+    
+    function nextLine() {
+        fetch('/control/next/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('navMessage', 'Passage à la ligne suivante', true);
+                updateStatus();
+                // Mettre à jour l'affichage des paroles avec la nouvelle ligne actuelle
+                setTimeout(updateStatus, 300);
+            } else {
+                showMessage('navMessage', data.message || 'Déjà à la dernière ligne', false);
+            }
+        })
+        .catch(error => {
+            showMessage('navMessage', 'Erreur : ' + error.message, false);
+        });
+    }
+    
+    function prevLine() {
+        fetch('/control/prev/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('navMessage', 'Retour à la ligne précédente', true);
+                updateStatus();
+                // Mettre à jour l'affichage des paroles avec la nouvelle ligne actuelle
+                setTimeout(updateStatus, 300);
+            } else {
+                showMessage('navMessage', data.message || 'Déjà à la première ligne', false);
+            }
+        })
+        .catch(error => {
+            showMessage('navMessage', 'Erreur : ' + error.message, false);
+        });
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        // Si pas de cookie CSRF, ce n'est pas grave car on utilise @csrf_exempt
+        return cookieValue || '';
+    }
+    
+    // Update status every 2 seconds
+    updateStatus();
+    setInterval(updateStatus, 2000);
+</script>
+{% endblock %}

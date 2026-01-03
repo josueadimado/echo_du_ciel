@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Louange Echo{% endblock %}</title>
+    <style>
+        .nav-menu {
+            background: rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background 0.3s;
+            font-size: 0.9em;
+        }
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .nav-menu.hidden {
+            display: none;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block nav_menu %}
+    <div class="nav-menu" id="navMenu">
+        <a href="{% url 'setlist' %}">📱 Liste des Chants</a>
+        <a href="{% url 'screen' %}">📺 Écran Projecteur</a>
+        <a href="{% url 'control' %}">🎛️ Contrôle</a>
+    </div>
+    {% endblock %}
+    {% block content %}{% endblock %}
+</body>
+</html>
