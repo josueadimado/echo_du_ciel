@@ -24,7 +24,7 @@ source venv/bin/activate
 
 # Installer les dépendances
 echo "Installation des dépendances..."
-pip install --user -r requirements.txt
+pip install -r requirements.txt
 
 # Collecter les fichiers statiques
 echo "Collecte des fichiers statiques..."
