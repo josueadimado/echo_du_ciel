@@ -152,7 +152,7 @@ def setlist_view(request):
             'role': 'Responsable RH PAM Togo'
         },
         {
-            'name': 'ATIVI EMMANUEL',
+            'name': 'ATIVI-GADZEZO EMMANUEL',
             'role': 'Responsable Qualité · Directeur du cabinet SQUALITY'
         },
         {
