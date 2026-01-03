@@ -145,7 +145,7 @@ def setlist_view(request):
         },
         {
             'name': 'KPETEMEY KOKOUVI PEDRO',
-            'role': 'Contrôleur'
+            'role': 'Auditeur Spécialité Fiscalité Comptabilité'
         },
         {
             'name': 'AMEDJODEKA ELOM',
@@ -177,6 +177,70 @@ def setlist_view(request):
         },
         {
             'name': 'ADOH ÉLODIE',
+            'role': ''
+        },
+        {
+            'name': 'MR ADODOKPO DOMINIQUE',
+            'role': 'Transitaire à Lomé'
+        },
+        {
+            'name': 'MME ADODOKPO CHRISTINE',
+            'role': 'Grande Commerçante à Lomé'
+        },
+        {
+            'name': 'SR EKOÉ SITSOFE',
+            'role': ''
+        },
+        {
+            'name': 'SR EKOÉ ESSI',
+            'role': ''
+        },
+        {
+            'name': 'MR EKOÉ AMÉLI',
+            'role': ''
+        },
+        {
+            'name': 'MR ADAMA HENOC',
+            'role': ''
+        },
+        {
+            'name': 'MR AHLIN MICHEL',
+            'role': 'Carreleur à Lomé'
+        },
+        {
+            'name': 'WOTONEGNON VICTOIRE',
+            'role': ''
+        },
+        {
+            'name': 'FR FREDDY',
+            'role': ''
+        },
+        {
+            'name': 'MME AGBASSAGBÉ DÉDÉ',
+            'role': ''
+        },
+        {
+            'name': 'MR AGBASSAGBÉ EMMANUEL',
+            'role': ''
+        },
+        {
+            'name': 'MR AKAKPO AMAH',
+            'role': ''
+        },
+        {
+            'name': 'FAMILLE LAWSON',
+            'role': ''
+        },
+        {
+            'name': 'MR AFOUTOU KOMLAN',
+            'role': 'Directeur Logistique & Transport à ECADIF SARL U'
+        },
+        {
+            'name': 'FAMILLE HOUESSOU',
+            'role': ''
+        },
+        {
+            'name': 'MANOTTI',
             'role': ''
         },
     ]
