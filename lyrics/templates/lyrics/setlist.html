@@ -879,12 +879,23 @@
             margin: 0 auto;
         }
 
-        /* Desktop: Slider view */
-        .sponsors-slider-wrapper {
+        /* Desktop: Sequential Batch Slider view */
+        .sponsors-slider-container {
             position: relative;
             width: 100%;
-            overflow: hidden;
+            min-height: 220px;
             padding: 30px 0;
+        }
+
+        .sponsors-slider-wrapper {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
             mask-image: linear-gradient(
                 to right,
                 transparent 0%,
@@ -901,12 +912,17 @@
             );
         }
 
+        .sponsors-slider-wrapper.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .sponsors-slider-track {
             display: flex;
             gap: 24px;
-            animation: scroll-sponsors-slider 15s linear infinite;
             will-change: transform;
             align-items: center;
+            animation: scroll-sponsors-slider 30s linear infinite;
         }
 
         .sponsors-slider-track:hover {
@@ -922,9 +938,9 @@
             }
         }
 
-        /* Desktop: Show slider, hide grid */
-        .sponsors-slider-wrapper {
-            display: block;
+        /* Desktop: Show slider container, hide grid */
+        .sponsors-slider-container {
+            display: flex;
             position: relative;
             z-index: 2;
         }
@@ -935,7 +951,7 @@
 
         /* Mobile: Grid view */
         @media (max-width: 768px) {
-            .sponsors-slider-wrapper {
+            .sponsors-slider-container {
                 display: none;
             }
             
@@ -1208,32 +1224,22 @@
                     <p>Merci à nos généreux sponsors pour leur soutien</p>
                 </div>
                 
-                <!-- Desktop: Slider view -->
-                <div class="sponsors-slider-wrapper">
-                    <div class="sponsors-slider-track">
-                        {% for partner in partners %}
-                        <div class="partner-item">
-                            <div class="partner-name">{{ partner.name|default:"" }}</div>
-                            {% if partner.role %}
-                            <div class="partner-role">{{ partner.role }}</div>
-                            {% else %}
-                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                        <!-- Duplicate for seamless loop -->
-                        {% for partner in partners %}
-                        <div class="partner-item">
-                            <div class="partner-name">{{ partner.name|default:"" }}</div>
-                            {% if partner.role %}
-                            <div class="partner-role">{{ partner.role }}</div>
-                            {% else %}
-                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
+                <!-- Desktop: Multi-row Slider view -->
+                <div class="sponsors-slider-container" id="sponsors-slider-container">
+                    <!-- Will be populated by JavaScript -->
                 </div>
+                
+                <!-- Store partners data for JavaScript -->
+                <script type="application/json" id="partners-data">
+                    [
+                        {% for partner in partners %}
+                        {
+                            "name": "{{ partner.name|default:""|escapejs }}",
+                            "role": "{{ partner.role|default:""|escapejs }}"
+                        }{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ]
+                </script>
                 
                 <!-- Mobile: Grid view -->
                 <div class="sponsors-grid">
@@ -1348,6 +1354,126 @@
             }
         })();
         {% endif %}
+
+        // Create sequential batch slider from partners data
+        (function() {
+            let currentBatchIndex = 0;
+            let batchRotationInterval = null;
+            const batchDisplayDuration = 35000; // Show each batch for 35 seconds
+            
+            function createSponsorSliders() {
+                const partnersDataEl = document.getElementById('partners-data');
+                const container = document.getElementById('sponsors-slider-container');
+                
+                if (!partnersDataEl || !container) return;
+                
+                try {
+                    const partners = JSON.parse(partnersDataEl.textContent);
+                    const totalPartners = partners.length;
+                    
+                    // Calculate number of batches (aim for 8-10 sponsors per batch)
+                    const sponsorsPerBatch = 10;
+                    const numBatches = Math.ceil(totalPartners / sponsorsPerBatch);
+                    
+                    // Divide partners into batches
+                    const batches = [];
+                    for (let i = 0; i < numBatches; i++) {
+                        const start = i * sponsorsPerBatch;
+                        const end = Math.min(start + sponsorsPerBatch, totalPartners);
+                        batches.push(partners.slice(start, end));
+                    }
+                    
+                    // Create slider wrappers for each batch
+                    batches.forEach(function(batch, index) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'sponsors-slider-wrapper';
+                        wrapper.dataset.batchIndex = index;
+                        
+                        const track = document.createElement('div');
+                        track.className = 'sponsors-slider-track';
+                        
+                        // Add partners twice for seamless loop
+                        [...batch, ...batch].forEach(function(partner) {
+                            const item = document.createElement('div');
+                            item.className = 'partner-item';
+                            
+                            const name = document.createElement('div');
+                            name.className = 'partner-name';
+                            name.textContent = partner.name || '';
+                            
+                            const role = document.createElement('div');
+                            role.className = 'partner-role';
+                            if (partner.role) {
+                                role.textContent = partner.role;
+                            } else {
+                                role.style.visibility = 'hidden';
+                                role.innerHTML = '&nbsp;';
+                            }
+                            
+                            item.appendChild(name);
+                            item.appendChild(role);
+                            track.appendChild(item);
+                        });
+                        
+                        wrapper.appendChild(track);
+                        container.appendChild(wrapper);
+                    });
+                    
+                    // Show first batch
+                    showBatch(0);
+                    
+                    // Start rotation
+                    startBatchRotation();
+                } catch (e) {
+                    console.error('Error creating sponsor sliders:', e);
+                }
+            }
+            
+            function showBatch(index) {
+                const container = document.getElementById('sponsors-slider-container');
+                if (!container) return;
+                
+                const wrappers = container.querySelectorAll('.sponsors-slider-wrapper');
+                if (wrappers.length === 0) return;
+                
+                // Hide all batches
+                wrappers.forEach(function(wrapper) {
+                    wrapper.classList.remove('active');
+                });
+                
+                // Show the selected batch
+                const targetIndex = index % wrappers.length;
+                if (wrappers[targetIndex]) {
+                    wrappers[targetIndex].classList.add('active');
+                }
+            }
+            
+            function startBatchRotation() {
+                const container = document.getElementById('sponsors-slider-container');
+                if (!container) return;
+                
+                const wrappers = container.querySelectorAll('.sponsors-slider-wrapper');
+                if (wrappers.length <= 1) return; // No need to rotate if only one batch
+                
+                // Clear any existing interval
+                if (batchRotationInterval) {
+                    clearInterval(batchRotationInterval);
+                }
+                
+                // Rotate batches
+                batchRotationInterval = setInterval(function() {
+                    currentBatchIndex = (currentBatchIndex + 1) % wrappers.length;
+                    showBatch(currentBatchIndex);
+                }, batchDisplayDuration);
+            }
+            
+            // Run when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', createSponsorSliders);
+            } else {
+                createSponsorSliders();
+            }
+        })();
     </script>
 </body>
 </html>
