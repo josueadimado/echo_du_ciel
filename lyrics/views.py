@@ -184,7 +184,7 @@ def setlist_view(request):
             'role': 'Transitaire à Lomé'
         },
         {
-            'name': 'MME ADODOKPO CHRISTINE',
+            'name': 'MME ADODOKPO CHRISTIANE',
             'role': 'Grande Commerçante à Lomé'
         },
         {
@@ -241,6 +241,14 @@ def setlist_view(request):
         },
         {
             'name': 'MANOTTI',
+            'role': ''
+        },
+        {
+            'name': 'DAVID FATCHAO',
+            'role': 'Commerçant au grand marché de Lomé'
+        },
+        {
+            'name': 'HOUESSOU CHRISTINE',
             'role': ''
         },
     ]
