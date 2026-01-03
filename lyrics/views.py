@@ -251,6 +251,10 @@ def setlist_view(request):
             'name': 'HOUESSOU CHRISTINE',
             'role': ''
         },
+        {
+            'name': 'ADIMADO BAYI',
+            'role': ''
+        },
     ]
     
     return render(request, 'lyrics/setlist.html', {
