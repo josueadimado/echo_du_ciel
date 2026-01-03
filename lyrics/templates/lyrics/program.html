@@ -6,13 +6,29 @@
     <title>Programme du Concert - Louange Echo</title>
     {% load static %}
     
+    <!-- Optimized font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
+        media="print"
+        onload="this.media='all'"
     />
-    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+    </noscript>
+    
+    <!-- Preload program image -->
+    {% if program_image %}
+    <link rel="preload" href="{% static program_image %}" as="image" />
+    {% endif %}
+    
+    <!-- Iconify - defer loading -->
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js" defer></script>
 
     <style>
         :root {
@@ -596,7 +612,7 @@
                     {% endif %}
                     
                     <div class="view-image" id="view-image">
-                        <img src="{% static program_image %}" alt="Programme du Concert WOE NYE" class="program-image">
+                        <img src="{% static program_image %}" alt="Programme du Concert WOE NYE" class="program-image" loading="eager" decoding="async">
                         <a href="{% static program_image %}" download class="download-btn">
                             <iconify-icon icon="lucide:download" style="font-size: 18px;"></iconify-icon>
                             Télécharger le Programme

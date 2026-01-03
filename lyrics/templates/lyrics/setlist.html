@@ -3,16 +3,34 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Concert de chants Classique & Variétés - CHORALE ECHO DU CIEL présente WOE NYE" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Louange Echo – Concert de Chants</title>
     {% load static %}
     
+    <!-- Optimized font loading - only load Inter which is the main font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
+        media="print"
+        onload="this.media='all'"
     />
-    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+    </noscript>
+    
+    <!-- Preload critical resources -->
+    {% if slider_images and slider_images|length > 0 %}
+    <link rel="preload" href="{% static slider_images.0 %}" as="image" />
+    {% endif %}
+    
+    <!-- Iconify - defer loading -->
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js" defer></script>
 
     <style>
         :root {
@@ -49,6 +67,60 @@
 
         * {
             box-sizing: border-box;
+        }
+
+        /* Page Loader */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(37, 99, 235, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--foreground);
+            letter-spacing: 0.5px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
         }
 
         body {
@@ -682,15 +754,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 24px 32px;
+            padding: 28px 36px;
             background-color: var(--card);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
-            min-width: 240px;
-            height: auto;
-            min-height: 100px;
+            width: 280px;
+            height: 140px;
+            position: relative;
         }
 
         .partner-item:hover {
@@ -701,22 +773,37 @@
         }
 
         .partner-name {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--foreground);
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             letter-spacing: 0.01em;
-            line-height: 1.3;
+            line-height: 1.4;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
         }
 
         .partner-role {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 400;
             color: var(--muted-foreground);
             text-align: center;
-            line-height: 1.4;
-            max-width: 220px;
+            line-height: 1.5;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+            flex: 1;
+            min-height: 40px;
         }
 
         .partner-item:hover .partner-name {
@@ -758,19 +845,24 @@
             }
             
             .partner-item {
-                min-width: 180px;
-                min-height: 90px;
+                width: 220px;
+                height: 120px;
                 padding: 20px 24px;
             }
             
             .partner-name {
                 font-size: 16px;
-                margin-bottom: 6px;
+                margin-bottom: 8px;
+                -webkit-line-clamp: 2;
             }
             
             .partner-role {
-                font-size: 13px;
-                max-width: 160px;
+                font-size: 12px;
+                -webkit-line-clamp: 3;
+            }
+            
+            .sponsors-track {
+                gap: 20px;
             }
         }
         
@@ -784,31 +876,47 @@
             }
             
             .partner-item {
-                min-width: 160px;
-                min-height: 85px;
+                width: 200px;
+                height: 110px;
                 padding: 18px 20px;
             }
             
             .partner-name {
                 font-size: 15px;
-                margin-bottom: 5px;
+                margin-bottom: 6px;
+                -webkit-line-clamp: 2;
             }
             
             .partner-role {
-                font-size: 12px;
-                max-width: 140px;
+                font-size: 11px;
+                -webkit-line-clamp: 3;
+            }
+            
+            .sponsors-track {
+                gap: 16px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Chargement...</div>
+    </div>
+
     <div class="page-root">
         <!-- Section 1: Hero with countdown + gallery -->
         <section class="hero">
             {% if slider_images %}
             <div class="hero-slider">
                 {% for img in slider_images %}
-                <img src="{% static img %}" alt="Chorale Echo du Ciel" {% if forloop.first %}class="active"{% endif %} />
+                <img 
+                    src="{% static img %}" 
+                    alt="Chorale Echo du Ciel" 
+                    {% if forloop.first %}class="active" loading="eager"{% else %}class="lazy" loading="lazy"{% endif %}
+                    decoding="async"
+                />
                 {% endfor %}
             </div>
             {% endif %}
@@ -871,18 +979,22 @@
                     <div class="sponsors-track">
                         {% for partner in partners %}
                         <div class="partner-item">
-                            <div class="partner-name">{{ partner.name }}</div>
+                            <div class="partner-name">{{ partner.name|default:"" }}</div>
                             {% if partner.role %}
                             <div class="partner-role">{{ partner.role }}</div>
+                            {% else %}
+                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
                             {% endif %}
                         </div>
                         {% endfor %}
                         <!-- Duplicate for seamless loop -->
                         {% for partner in partners %}
                         <div class="partner-item">
-                            <div class="partner-name">{{ partner.name }}</div>
+                            <div class="partner-name">{{ partner.name|default:"" }}</div>
                             {% if partner.role %}
                             <div class="partner-role">{{ partner.role }}</div>
+                            {% else %}
+                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -893,6 +1005,20 @@
     </div>
 
     <script>
+        // Hide loader when page is fully loaded
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                setTimeout(function() {
+                    loader.classList.add('hidden');
+                    // Remove from DOM after animation
+                    setTimeout(function() {
+                        loader.remove();
+                    }, 500);
+                }, 300);
+            }
+        });
+
         // Countdown to January 3rd, 2026 at 5pm
         function updateCountdown() {
             const now = new Date();
@@ -925,49 +1051,51 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // Image slider functionality
+        // Image slider functionality - optimized loading
         {% if slider_images %}
         (function() {
             const heroImages = document.querySelectorAll('.hero-slider img');
             let currentIndex = 0;
+            let rotationInterval = null;
             
-            // Wait for images to load before starting rotation
-            let imagesLoaded = 0;
-            const totalImages = heroImages.length;
-            
-            heroImages.forEach((img) => {
-                if (img.complete) {
-                    imagesLoaded++;
-                } else {
-                    img.addEventListener('load', function() {
-                        imagesLoaded++;
-                        if (imagesLoaded === totalImages && totalImages > 1) {
-                            startRotation();
-                        }
-                    });
-                }
-            });
-            
-            // If all images are already loaded, start rotation
-            if (imagesLoaded === totalImages && totalImages > 1) {
-                startRotation();
-            }
-            
+            // Optimized: Start rotation after first image loads, don't wait for all
             function startRotation() {
-                // Rotate images every 4 seconds (2s fade + 2s display)
-                setInterval(rotateImages, 4000);
+                if (rotationInterval || heroImages.length <= 1) return;
+                
+                rotationInterval = setInterval(function() {
+                    heroImages[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex + 1) % heroImages.length;
+                    heroImages[currentIndex].classList.add('active');
+                    
+                    // Lazy load next image if not already loaded
+                    const nextIndex = (currentIndex + 1) % heroImages.length;
+                    const nextImg = heroImages[nextIndex];
+                    if (nextImg && nextImg.dataset.src && !nextImg.complete) {
+                        nextImg.src = nextImg.dataset.src;
+                        delete nextImg.dataset.src;
+                    }
+                }, 5000); // Change image every 5 seconds
             }
             
-            function rotateImages() {
-                if (heroImages.length > 1) {
-                    // Remove active class from current image
-                    heroImages[currentIndex].classList.remove('active');
-                    
-                    // Move to next image
-                    currentIndex = (currentIndex + 1) % heroImages.length;
-                    
-                    // Add active class to new image
-                    heroImages[currentIndex].classList.add('active');
+            // Start rotation after first image loads
+            const firstImage = heroImages[0];
+            if (firstImage) {
+                if (firstImage.complete) {
+                    setTimeout(startRotation, 1000);
+                } else {
+                    firstImage.addEventListener('load', function() {
+                        setTimeout(startRotation, 1000);
+                    }, { once: true });
+                }
+            }
+            
+            // Preload next images in background (optimized)
+            if (heroImages.length > 1) {
+                // Preload second image
+                const secondImage = heroImages[1];
+                if (secondImage && !secondImage.complete) {
+                    const img = new Image();
+                    img.src = secondImage.src;
                 }
             }
         })();
