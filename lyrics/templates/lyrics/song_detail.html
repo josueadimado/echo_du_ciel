@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#D4AF37" />
     <title>{{ song.title }} - Louange Echo</title>
     {% load static %}
     
@@ -279,7 +280,7 @@
         /* Responsive */
         @media (max-width: 768px) {
             .page-container {
-                padding: 20px 0;
+                padding: 16px 0;
             }
 
             .container {
@@ -288,28 +289,51 @@
 
             .nav-buttons {
                 flex-direction: column;
+                gap: 10px;
+                margin-bottom: 24px;
             }
 
             .nav-btn {
                 width: 100%;
                 justify-content: center;
+                padding: 14px 20px;
+                font-size: 14px;
             }
 
             .song-header {
                 padding: 32px 20px;
-                border-radius: 0;
-                margin-left: -16px;
-                margin-right: -16px;
-                width: calc(100% + 32px);
+                border-radius: var(--radius-xl);
+                margin-bottom: 24px;
+            }
+
+            .song-title {
+                font-size: 26px;
+            }
+
+            .song-meta {
+                font-size: 14px;
             }
 
             .controls-section {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 12px;
+                padding: 16px 20px;
+            }
+
+            .controls-label {
+                text-align: center;
+                font-size: 13px;
             }
 
             .font-controls {
                 justify-content: center;
+            }
+
+            .font-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
             }
 
             .lyrics-wrapper {
@@ -318,22 +342,62 @@
             }
 
             .lyrics-container {
-                font-size: 18px;
+                font-size: clamp(16px, 4vw, 18px);
             }
 
             .lyric-line {
-                padding: 12px 16px;
-                margin-bottom: 16px;
+                padding: 14px 16px;
+                margin-bottom: 14px;
+                font-size: inherit;
             }
         }
 
         @media (max-width: 480px) {
+            .page-container {
+                padding: 12px 0;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .nav-buttons {
+                margin-bottom: 20px;
+            }
+
+            .nav-btn {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .song-header {
+                padding: 24px 16px;
+            }
+
             .song-title {
-                font-size: 24px;
+                font-size: 22px;
+            }
+
+            .song-meta {
+                font-size: 13px;
+            }
+
+            .controls-section {
+                padding: 14px 16px;
+            }
+
+            .lyrics-wrapper {
+                padding: 20px 16px;
             }
 
             .lyrics-container {
-                font-size: 16px;
+                font-size: clamp(15px, 4vw, 17px);
+                line-height: 1.7;
+            }
+
+            .lyric-line {
+                padding: 12px 14px;
+                margin-bottom: 12px;
             }
         }
     </style>

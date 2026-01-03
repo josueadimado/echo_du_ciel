@@ -2,9 +2,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <meta name="description" content="Concert de chants Classique & Variétés - CHORALE ECHO DU CIEL présente WOE NYE" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#D4AF37" />
     <title>Louange Echo – Concert de Chants</title>
     {% load static %}
     
@@ -34,34 +35,75 @@
 
     <style>
         :root {
-            --background: #fbfbfd;
-            --foreground: #101828;
-            --border: #00000014;
+            /* Color palette inspired by the concert flyer */
+            /* Gold/Metallic accents */
+            --gold: #D4AF37;
+            --gold-light: #F4D03F;
+            --gold-dark: #B8860B;
+            
+            /* Deep red from the flyer */
+            --red-deep: #8B0000;
+            --red-dark: #A52A2A;
+            --red-banner: #C41E3A;
+            
+            /* Cream/Light yellow background */
+            --cream: #FFF8DC;
+            --cream-light: #FFFACD;
+            
+            /* Blue accents from the pattern */
+            --blue-accent: #1E3A8A;
+            --blue-light: #3B82F6;
+            
+            /* Base colors */
+            --background: #FFF8DC;
+            --foreground: #1a1a1a;
+            --border: rgba(139, 0, 0, 0.15);
             --input: #ffffff;
-            --primary: #2563eb;
-            --primary-foreground: #ffffff;
-            --secondary: #f1f5f9;
-            --secondary-foreground: #0f172a;
-            --muted: #f8fafc;
-            --muted-foreground: #94a3b8;
+            
+            /* Primary color - Gold */
+            --primary: #D4AF37;
+            --primary-foreground: #1a1a1a;
+            --primary-hover: #B8860B;
+            
+            /* Secondary color - Deep red */
+            --secondary: #8B0000;
+            --secondary-foreground: #ffffff;
+            --secondary-hover: #A52A2A;
+            
+            /* Muted colors */
+            --muted: #FFFACD;
+            --muted-foreground: #666666;
+            
+            /* Accent colors */
+            --accent: #D4AF37;
+            --accent-foreground: #1a1a1a;
+            
+            /* Status colors */
             --success: #16a34a;
             --success-foreground: #ffffff;
-            --accent: #f59e0b;
-            --accent-foreground: #0f172a;
             --destructive: #dc2626;
             --destructive-foreground: #ffffff;
             --warning: #f97316;
             --warning-foreground: #0f172a;
+            
+            /* Card colors */
             --card: #ffffff;
-            --card-foreground: #0f172a;
-            --sidebar: #f8faff;
-            --sidebar-foreground: #0f172a;
-            --sidebar-primary: #e6f0ff;
-            --sidebar-primary-foreground: #1e3a8a;
+            --card-foreground: #1a1a1a;
+            --card-border: rgba(212, 175, 55, 0.2);
+            
+            /* Sidebar colors */
+            --sidebar: #FFFACD;
+            --sidebar-foreground: #1a1a1a;
+            --sidebar-primary: rgba(212, 175, 55, 0.1);
+            --sidebar-primary-foreground: #B8860B;
+            
+            /* Border radius */
             --radius-sm: 4px;
             --radius-md: 6px;
             --radius-lg: 8px;
             --radius-xl: 12px;
+            
+            /* Typography */
             --font-family-body: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
@@ -165,12 +207,12 @@
             background:
                 radial-gradient(
                     circle at 20% 30%,
-                    rgba(37, 99, 235, 0.1),
+                    rgba(212, 175, 55, 0.15),
                     transparent 50%
                 ),
                 radial-gradient(
                     circle at 80% 70%,
-                    rgba(139, 92, 246, 0.08),
+                    rgba(139, 0, 0, 0.08),
                     transparent 50%
                 );
             z-index: 1;
@@ -238,12 +280,13 @@
         .hero-echo-name {
             font-size: clamp(48px, 8vw, 72px);
             font-weight: 800;
-            color: #FFD700;
+            color: #D4AF37;
             letter-spacing: 0.08em;
             margin-bottom: 16px;
             text-shadow: 
                 0 2px 20px rgba(0, 0, 0, 0.5),
-                0 0 30px rgba(255, 215, 0, 0.4);
+                0 0 30px rgba(212, 175, 55, 0.4),
+                0 0 10px rgba(212, 175, 55, 0.3);
             line-height: 1.2;
         }
 
@@ -294,7 +337,7 @@
             }
             
             .hero {
-                min-height: auto;
+                min-height: 550px;
             }
             
             .hero-inner {
@@ -306,99 +349,136 @@
             }
             
             .hero-choir-name {
-                font-size: 18px;
+                font-size: 20px;
                 margin-bottom: 10px;
             }
             
             .hero-echo-name {
-                font-size: 42px;
-                margin-bottom: 14px;
-            }
-            
-            .hero-presents {
-                font-size: 16px;
-                margin-bottom: 20px;
-            }
-            
-            .hero-main-title {
                 font-size: 48px;
                 margin-bottom: 14px;
             }
             
+            .hero-presents {
+                font-size: 17px;
+                margin-bottom: 20px;
+            }
+            
+            .hero-main-title {
+                font-size: 52px;
+                margin-bottom: 14px;
+            }
+            
             .hero-concert-type {
-                font-size: 16px;
+                font-size: 17px;
             }
             
             .hero-countdown-row {
                 margin-bottom: 40px;
-            }
-            
-            .hero-title {
-                font-size: 36px;
-            }
-            
-            .hero-subtitle {
-                font-size: 16px;
-            }
-            
-            .hero-countdown-row {
-                gap: 6px;
+                gap: 8px;
                 justify-content: center;
                 flex-wrap: nowrap;
-                padding: 0 10px;
+                padding: 0 12px;
             }
             
             .hero-countdown-box {
                 min-width: 0;
                 flex: 1 1 0;
-                padding: 10px 6px;
-                max-width: calc(25% - 5px);
+                padding: 12px 8px;
+                max-width: calc(25% - 6px);
             }
             
             .hero-countdown-number {
-                font-size: 22px;
+                font-size: 24px;
             }
             
             .hero-countdown-label {
-                font-size: 10px;
+                font-size: 11px;
+            }
+            
+            .hero-action-buttons {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .hero-action-btn {
+                width: 100%;
             }
         }
         
         @media (max-width: 480px) {
+            .container {
+                padding: 12px 12px 32px;
+            }
+            
+            .hero {
+                min-height: 500px;
+            }
+            
             .hero-inner {
-                padding: 30px 12px;
+                padding: 40px 12px 30px;
             }
             
             .hero-choir-name {
-                font-size: 18px;
+                font-size: 16px;
+                margin-bottom: 8px;
             }
             
             .hero-echo-name {
-                font-size: 36px;
+                font-size: 32px;
+                margin-bottom: 12px;
+            }
+            
+            .hero-presents {
+                font-size: 14px;
+                margin-bottom: 16px;
             }
             
             .hero-main-title {
-                font-size: 40px;
+                font-size: 36px;
+                margin-bottom: 12px;
+            }
+            
+            .hero-concert-type {
+                font-size: 14px;
+                padding: 0 12px;
             }
             
             .hero-countdown-row {
                 gap: 4px;
                 padding: 0 8px;
+                margin-bottom: 30px;
             }
             
             .hero-countdown-box {
                 min-width: 0;
                 flex: 1 1 0;
-                padding: 8px 4px;
+                padding: 10px 4px;
                 max-width: calc(25% - 3px);
+                border-radius: 8px;
             }
             
             .hero-countdown-number {
-                font-size: 18px;
+                font-size: 20px;
             }
             
             .hero-countdown-label {
                 font-size: 9px;
+                line-height: 1.2;
+            }
+            
+            .hero-action-buttons {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .hero-action-btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 15px;
             }
         }
 
@@ -459,17 +539,18 @@
             min-width: 80px;
             padding: 16px 14px;
             border-radius: 12px;
-            background-color: rgba(255, 255, 255, 0.15);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(184, 134, 11, 0.2) 100%);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(212, 175, 55, 0.4);
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 15px rgba(212, 175, 55, 0.2);
             transition: transform 0.2s;
         }
 
         .hero-countdown-box:hover {
             transform: translateY(-2px);
-            background-color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.35) 0%, rgba(184, 134, 11, 0.3) 100%);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2), 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         .hero-countdown-number {
@@ -505,23 +586,24 @@
             justify-content: center;
             gap: 10px;
             padding: 16px 24px;
-            background-color: rgba(255, 255, 255, 0.95);
-            color: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 248, 220, 0.95) 100%);
+            color: var(--red-deep);
             text-decoration: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 10px rgba(212, 175, 55, 0.1);
             width: 100%;
-            border: 2px solid transparent;
+            border: 2px solid rgba(212, 175, 55, 0.3);
         }
 
         .hero-action-btn:hover {
-            background-color: #ffffff;
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8DC 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-            border-color: var(--primary);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 0 15px rgba(212, 175, 55, 0.2);
+            border-color: var(--gold);
+            color: var(--red-banner);
         }
 
         .hero-action-btn:active {
@@ -670,12 +752,12 @@
             color: var(--foreground);
         }
 
-        /* Sponsors Section */
+        /* Sponsors Section - Matching flyer theme with sparkly background */
         .sponsors-section {
             padding: 60px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #FFF8DC 0%, #FFFACD 50%, #ffffff 100%);
+            border-top: 2px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
             overflow: hidden;
             position: relative;
         }
@@ -688,40 +770,187 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.05), transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.05), transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08), transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(139, 0, 0, 0.05), transparent 50%);
             pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Sparkly stars animation */
+        .sponsors-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, rgba(212, 175, 55, 0.8), transparent),
+                radial-gradient(2px 2px at 60% 70%, rgba(212, 175, 55, 0.6), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(212, 175, 55, 0.9), transparent),
+                radial-gradient(1px 1px at 80% 10%, rgba(212, 175, 55, 0.7), transparent),
+                radial-gradient(2px 2px at 90% 50%, rgba(212, 175, 55, 0.5), transparent),
+                radial-gradient(1px 1px at 33% 60%, rgba(212, 175, 55, 0.8), transparent),
+                radial-gradient(1px 1px at 15% 80%, rgba(212, 175, 55, 0.6), transparent),
+                radial-gradient(2px 2px at 70% 20%, rgba(212, 175, 55, 0.7), transparent),
+                radial-gradient(1px 1px at 40% 90%, rgba(212, 175, 55, 0.9), transparent),
+                radial-gradient(2px 2px at 10% 40%, rgba(212, 175, 55, 0.5), transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 50% 50%, 25% 25%, 75% 75%, 30% 70%, 60% 30%, 90% 60%;
+            animation: sparkle 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            25% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(0.9);
+            }
+            75% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        /* Additional floating sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(212, 175, 55, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: float-sparkle 6s ease-in-out infinite;
+        }
+
+        @keyframes float-sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(0) scale(0);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateY(-60px) scale(1.2);
+            }
+            90% {
+                opacity: 0.5;
+                transform: translateY(-100px) scale(0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0);
+            }
         }
 
         .sponsors-header {
             text-align: center;
             margin-bottom: 40px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         .sponsors-header h2 {
             font-size: 32px;
             font-weight: 700;
-            color: var(--foreground);
+            color: var(--red-deep);
             margin-bottom: 12px;
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
         }
 
         .sponsors-header p {
             font-size: 17px;
-            color: var(--muted-foreground);
+            color: var(--red-dark);
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .sponsors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            padding: 20px 0;
+        /* Desktop: Slider view */
+        .sponsors-slider-wrapper {
             position: relative;
-            z-index: 1;
+            width: 100%;
+            overflow: hidden;
+            padding: 30px 0;
+            mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                black 5%,
+                black 95%,
+                transparent 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent 0%,
+                black 5%,
+                black 95%,
+                transparent 100%
+            );
+        }
+
+        .sponsors-slider-track {
+            display: flex;
+            gap: 24px;
+            animation: scroll-sponsors-slider 15s linear infinite;
+            will-change: transform;
+            align-items: center;
+        }
+
+        .sponsors-slider-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-sponsors-slider {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Desktop: Show slider, hide grid */
+        .sponsors-slider-wrapper {
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sponsors-grid {
+            display: none;
+        }
+
+        /* Mobile: Grid view */
+        @media (max-width: 768px) {
+            .sponsors-slider-wrapper {
+                display: none;
+            }
+            
+            .sponsors-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
+                padding: 0 20px;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .partner-item {
+                width: 100%;
+            }
         }
 
         .partner-item {
@@ -729,63 +958,92 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 28px 32px;
-            background-color: var(--card);
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            min-height: 140px;
+            padding: 32px 28px;
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8DC 100%);
+            border-radius: 16px;
+            border: 2px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                0 0 12px rgba(212, 175, 55, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 160px;
+            height: auto;
             position: relative;
+            flex-shrink: 0;
+            width: 320px;
+            overflow: visible;
+        }
+
+        .partner-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
         }
 
         .partner-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-            border-color: var(--primary);
-            background-color: rgba(37, 99, 235, 0.05);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 
+                0 12px 32px rgba(0, 0, 0, 0.15),
+                0 0 20px rgba(212, 175, 55, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border-color: var(--gold);
+            background: linear-gradient(135deg, #ffffff 0%, #FFFACD 100%);
+        }
+
+        .partner-item:hover::before {
+            transform: scaleX(1);
         }
 
         .partner-name {
             font-size: 17px;
             font-weight: 700;
-            color: var(--foreground);
+            color: var(--red-deep);
             text-align: center;
-            margin-bottom: 10px;
-            letter-spacing: 0.01em;
+            margin-bottom: 12px;
+            letter-spacing: 0.02em;
             line-height: 1.4;
             width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            overflow: visible;
             word-break: break-word;
+            position: relative;
+            z-index: 1;
+            display: block;
+            hyphens: auto;
         }
 
         .partner-role {
             font-size: 13px;
-            font-weight: 400;
-            color: var(--muted-foreground);
+            font-weight: 500;
+            color: var(--red-dark);
             text-align: center;
-            line-height: 1.5;
+            line-height: 1.6;
             width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
+            overflow: visible;
             word-break: break-word;
             flex: 1;
-            min-height: 40px;
+            min-height: 45px;
+            position: relative;
+            z-index: 1;
+            display: block;
+            hyphens: auto;
         }
 
         .partner-item:hover .partner-name {
-            color: var(--primary);
+            color: var(--red-banner);
+            transform: scale(1.02);
+            transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .partner-item:hover .partner-role {
-            color: var(--foreground);
+            color: var(--red-deep);
         }
 
         @media (max-width: 768px) {
@@ -933,11 +1191,50 @@
 
         <!-- Sponsors Section -->
         <section class="sponsors-section">
+            <!-- Floating sparkles -->
+            <div class="sparkle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+            <div class="sparkle" style="left: 30%; top: 40%; animation-delay: 1s;"></div>
+            <div class="sparkle" style="left: 50%; top: 15%; animation-delay: 2s;"></div>
+            <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 1.5s;"></div>
+            <div class="sparkle" style="left: 85%; top: 30%; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="left: 20%; top: 70%; animation-delay: 2.5s;"></div>
+            <div class="sparkle" style="left: 60%; top: 80%; animation-delay: 1.2s;"></div>
+            <div class="sparkle" style="left: 90%; top: 50%; animation-delay: 0.8s;"></div>
+            
             <div class="container">
                 <div class="sponsors-header">
                     <h2>Nos Sponsors</h2>
                     <p>Merci à nos généreux sponsors pour leur soutien</p>
                 </div>
+                
+                <!-- Desktop: Slider view -->
+                <div class="sponsors-slider-wrapper">
+                    <div class="sponsors-slider-track">
+                        {% for partner in partners %}
+                        <div class="partner-item">
+                            <div class="partner-name">{{ partner.name|default:"" }}</div>
+                            {% if partner.role %}
+                            <div class="partner-role">{{ partner.role }}</div>
+                            {% else %}
+                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <!-- Duplicate for seamless loop -->
+                        {% for partner in partners %}
+                        <div class="partner-item">
+                            <div class="partner-name">{{ partner.name|default:"" }}</div>
+                            {% if partner.role %}
+                            <div class="partner-role">{{ partner.role }}</div>
+                            {% else %}
+                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Mobile: Grid view -->
                 <div class="sponsors-grid">
                     {% for partner in partners %}
                     <div class="partner-item">

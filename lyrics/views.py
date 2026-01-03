@@ -83,43 +83,19 @@ def setlist_view(request):
     program_image = cached_data['program_image']
     
     # Use a different image as hero background (not the program)
-    # Skip huge files (11-12MB) to avoid slow loading
-    huge_files = ['dsc_7294', 'fghft', 'ft.jpg', 'gsrz', 'gtt']
+    # Include all images - lazy loading in template will handle large files
     hero_image = None
     for img in available_images:
         if img != program_image:
-            filename = os.path.basename(img).lower()
-            # Skip huge files for hero
-            if not any(huge in filename for huge in huge_files):
-                hero_image = img
-                break
+            hero_image = img
+            break
     
-    # If no small image found, use first available
-    if not hero_image and available_images:
-        for img in available_images:
-            if img != program_image:
-                hero_image = img
-                break
+    # Gallery: exclude program and hero images
+    gallery_images = [img for img in available_images if img != hero_image and img != program_image][:4]
     
-    # Gallery: exclude program and hero images, skip huge files
-    gallery_images = []
-    for img in available_images:
-        if img != hero_image and img != program_image:
-            filename = os.path.basename(img).lower()
-            # Skip huge files for gallery
-            if not any(huge in filename for huge in huge_files):
-                gallery_images.append(img)
-                if len(gallery_images) >= 4:
-                    break
-    
-    # Slider images: exclude program image and huge files
-    slider_images = []
-    for img in available_images:
-        if img != program_image:
-            filename = os.path.basename(img).lower()
-            # Skip huge files for slider (they're too big to load quickly)
-            if not any(huge in filename for huge in huge_files):
-                slider_images.append(img)
+    # Slider images: exclude program image (include all others, even large ones)
+    # Lazy loading in template will handle the large files efficiently
+    slider_images = [img for img in available_images if img != program_image]
     
     # Get the full URL for QR code generation (will be done client-side)
     # QR code should point to the songs list page
@@ -132,75 +108,75 @@ def setlist_view(request):
     # Format: {'name': 'Name', 'role': 'Role/Activity'}
     partners = [
         {
-            'name': 'Mr ADIMADO Kossi Aimé',
-            'role': 'Directeur ECADIF SARL U Spécialisé dans la Vente de moto et pieces detachees d\'Evame et Apsonic'
+            'name': 'MR ADIMADO KOSSI AIMÉ',
+            'role': 'Directeur ECADIF SARL U Spécialisé dans la vente de motos et pièces détachées d\'Evame et Apsonic'
         },
         {
-            'name': 'Mr Magloire',
+            'name': 'MR MAGLOIRE',
             'role': 'Directeur Evame Togo'
         },
         {
-            'name': 'Mr AFOUTOU Komi',
+            'name': 'MR AFOUTOU KOMI',
             'role': 'Directeur Commercial ECADIF SARL U'
         },
         {
-            'name': 'ADIMADO Kodzo Josue',
+            'name': 'ADIMADO KODZO JOSUE',
             'role': 'Responsable IT & Gestion des Stocks, ECADIF Sarl U · Fondateur, The Creative Branders Ltd'
         },
         {
-            'name': 'ADIMADO Makafui',
+            'name': 'ADIMADO MAKAFUI',
             'role': 'Auditeur Interne à ECADIF SARL U'
         },
         {
-            'name': 'AFFO Cedric',
-            'role': 'Auditeur a GCAS'
+            'name': 'AFFO CEDRIC',
+            'role': 'Auditeur à GCAS'
         },
         {
-            'name': 'AFOUTOU Akouvi',
+            'name': 'AFOUTOU AKOUVI',
             'role': 'Couturière'
         },
         {
-            'name': 'Ahama soke',
+            'name': 'AHAMA SOKÉ',
             'role': ''
         },
         {
-            'name': 'Ahama Lucrèce',
+            'name': 'AHAMA LUCRÈCE',
             'role': 'Couturière'
         },
         {
-            'name': 'KPETEMEY kokouvi Pedro',
+            'name': 'KPETEMEY KOKOUVI PEDRO',
             'role': 'Contrôleur'
         },
         {
-            'name': 'Amedjodeka Elom',
+            'name': 'AMEDJODEKA ELOM',
             'role': 'Responsable RH PAM Togo'
         },
         {
-            'name': 'ATIVI Emmanuel',
+            'name': 'ATIVI EMMANUEL',
             'role': 'Responsable Qualité · Directeur du cabinet'
         },
         {
-            'name': 'Adama Olivia',
+            'name': 'ADAMA OLIVIA',
             'role': ''
         },
         {
-            'name': 'AGBENOWOKO komi',
+            'name': 'AGBENOWOKO KOMI',
             'role': 'Transitaire'
         },
         {
-            'name': 'Malonnui Adjovi',
-            'role': 'Revendeuse de pagne au grand marché'
+            'name': 'MALONNUI ADJOVI',
+            'role': 'Revendeuse de pagnes au grand marché'
         },
         {
-            'name': 'Mme Amey Bodiviane',
+            'name': 'MME AMEY BODIVIANE',
             'role': 'Responsable RH'
         },
         {
-            'name': 'AFOGNON Bonaventure',
+            'name': 'AFOGNON BONAVENTURE',
             'role': 'Menuisier'
         },
         {
-            'name': 'Adoh Élodie',
+            'name': 'ADOH ÉLODIE',
             'role': ''
         },
     ]

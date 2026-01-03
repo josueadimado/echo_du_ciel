@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#D4AF37" />
     <title>Programme du Concert - Louange Echo</title>
     {% load static %}
     
@@ -530,29 +531,95 @@
         }
         
         @media (max-width: 480px) {
+            .container {
+                padding: 12px 12px 32px;
+            }
+            
+            .nav-inner {
+                padding: 10px 12px;
+            }
+            
             .nav-logo-text {
-                font-size: 14px;
+                font-size: 13px;
             }
             
             .nav-links {
-                gap: 4px;
+                gap: 6px;
+                margin-top: 10px;
             }
             
             .nav-link {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            .btn {
+                padding: 6px 12px;
                 font-size: 12px;
-                padding: 5px 10px;
+            }
+            
+            .program-section {
+                padding: 20px 0;
+            }
+            
+            .program-header {
+                padding: 0 12px;
+                margin-bottom: 20px;
             }
             
             .program-header h1 {
-                font-size: 22px;
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            
+            .program-header p {
+                font-size: 13px;
             }
             
             .program-wrapper {
                 padding: 16px;
+                margin: 0 12px;
+            }
+            
+            .view-toggle {
+                gap: 6px;
+                margin-bottom: 16px;
+            }
+            
+            .toggle-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+            
+            .program-image {
+                width: 100%;
+                height: auto;
+                margin-bottom: 16px;
+            }
+            
+            .download-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+                width: 100%;
+                justify-content: center;
             }
             
             .program-text-wrapper {
-                padding: 20px 16px;
+                padding: 16px 12px;
+            }
+            
+            .program-text-content {
+                font-size: 14px;
+            }
+            
+            .program-text-section-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .program-text-section-content {
+                font-size: 14px;
+                padding-left: 20px;
             }
         }
     </style>
