@@ -153,7 +153,7 @@ def setlist_view(request):
         },
         {
             'name': 'ATIVI EMMANUEL',
-            'role': 'Responsable Qualité · Directeur du cabinet'
+            'role': 'Responsable Qualité · Directeur du cabinet SQUALITY'
         },
         {
             'name': 'ADAMA OLIVIA',
