@@ -114,6 +114,26 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Additional static files directories
+STATICFILES_DIRS = [
+    BASE_DIR / 'lyrics' / 'static',
+]
+
+# Cache configuration for development
+# Using simple in-memory cache for faster development
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Development optimizations
+if DEBUG:
+    # Disable some middleware for faster development
+    # Keep only essential middleware
+    pass
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

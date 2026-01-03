@@ -715,53 +715,27 @@
             margin: 0 auto;
         }
 
-        .sponsors-slider {
+        .sponsors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 20px 0;
             position: relative;
-            width: 100%;
-            overflow: hidden;
-            padding: 30px 0;
-            mask-image: linear-gradient(
-                to right,
-                transparent 0%,
-                black 10%,
-                black 90%,
-                transparent 100%
-            );
-            -webkit-mask-image: linear-gradient(
-                to right,
-                transparent 0%,
-                black 10%,
-                black 90%,
-                transparent 100%
-            );
-        }
-
-        .sponsors-track {
-            display: flex;
-            gap: 80px;
-            animation: scroll-sponsors 40s linear infinite;
-            will-change: transform;
-            align-items: center;
-        }
-
-        .sponsors-track:hover {
-            animation-play-state: paused;
+            z-index: 1;
         }
 
         .partner-item {
-            flex-shrink: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 28px 36px;
+            padding: 28px 32px;
             background-color: var(--card);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
-            width: 280px;
-            height: 140px;
+            min-height: 140px;
             position: relative;
         }
 
@@ -814,15 +788,6 @@
             color: var(--foreground);
         }
 
-        @keyframes scroll-sponsors {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
         @media (max-width: 768px) {
             .sponsors-section {
                 padding: 40px 0;
@@ -840,14 +805,15 @@
                 font-size: 14px;
             }
             
-            .sponsors-slider {
+            .sponsors-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
                 padding: 0 20px;
             }
             
             .partner-item {
-                width: 220px;
-                height: 120px;
-                padding: 20px 24px;
+                min-height: 120px;
+                padding: 24px 28px;
             }
             
             .partner-name {
@@ -860,10 +826,6 @@
                 font-size: 12px;
                 -webkit-line-clamp: 3;
             }
-            
-            .sponsors-track {
-                gap: 20px;
-            }
         }
         
         @media (max-width: 480px) {
@@ -875,10 +837,15 @@
                 font-size: 22px;
             }
             
+            .sponsors-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 0 16px;
+            }
+            
             .partner-item {
-                width: 200px;
-                height: 110px;
-                padding: 18px 20px;
+                min-height: 110px;
+                padding: 20px 24px;
             }
             
             .partner-name {
@@ -890,10 +857,6 @@
             .partner-role {
                 font-size: 11px;
                 -webkit-line-clamp: 3;
-            }
-            
-            .sponsors-track {
-                gap: 16px;
             }
         }
     </style>
@@ -975,30 +938,17 @@
                     <h2>Nos Sponsors</h2>
                     <p>Merci à nos généreux sponsors pour leur soutien</p>
                 </div>
-                <div class="sponsors-slider">
-                    <div class="sponsors-track">
-                        {% for partner in partners %}
-                        <div class="partner-item">
-                            <div class="partner-name">{{ partner.name|default:"" }}</div>
-                            {% if partner.role %}
-                            <div class="partner-role">{{ partner.role }}</div>
-                            {% else %}
-                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                        <!-- Duplicate for seamless loop -->
-                        {% for partner in partners %}
-                        <div class="partner-item">
-                            <div class="partner-name">{{ partner.name|default:"" }}</div>
-                            {% if partner.role %}
-                            <div class="partner-role">{{ partner.role }}</div>
-                            {% else %}
-                            <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
+                <div class="sponsors-grid">
+                    {% for partner in partners %}
+                    <div class="partner-item">
+                        <div class="partner-name">{{ partner.name|default:"" }}</div>
+                        {% if partner.role %}
+                        <div class="partner-role">{{ partner.role }}</div>
+                        {% else %}
+                        <div class="partner-role" style="visibility: hidden;">&nbsp;</div>
+                        {% endif %}
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>

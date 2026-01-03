@@ -14,68 +14,112 @@ def setlist_view(request):
     Home page showing the setlist (list of all songs).
     This is what the QR code should point to.
     """
-    songs = Song.objects.all()
-    # Find available images from the choir
+    # Optimized: Cache image detection to avoid scanning on every request
     import os
+    from django.core.cache import cache
     from django.conf import settings
-    static_images_dir = os.path.join(settings.BASE_DIR, 'lyrics', 'static', 'lyrics', 'images')
     
-    # Get all image files
-    available_images = []
-    program_image = None
+    # Cache key for image paths
+    cache_key = 'setlist_images'
+    cached_data = cache.get(cache_key)
     
-    if os.path.exists(static_images_dir):
-        # Priority: look for the specific program image first
-        program_keywords = [
-            'program origina',  # Specific program image
-            'program original',
-            'whatsapp image 2026-01-02 at 11.31.38',  # Specific program image
-            'program', 'programme', 'poster', 'affiche', 
-            'ft', 'gtt', 'gsrz', 'fghft'
-        ]
+    if cached_data is None:
+        # Find available images from the choir (only if not cached)
+        static_images_dir = os.path.join(settings.BASE_DIR, 'lyrics', 'static', 'lyrics', 'images')
         
-        # First pass: look for specific program image or keywords
-        for filename in os.listdir(static_images_dir):
-            if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                full_path = f'lyrics/images/{filename}'
-                available_images.append(full_path)
-                
-                filename_lower = filename.lower()
-                # Check for specific program image first
-                if 'program origina' in filename_lower or 'program original' in filename_lower:
-                    program_image = full_path
-                elif not program_image and 'whatsapp image 2026-01-02 at 11.31.38' in filename_lower:
-                    program_image = full_path
-                elif not program_image and any(keyword in filename_lower for keyword in program_keywords[3:]):
-                    program_image = full_path
+        # Get all image files
+        available_images = []
+        program_image = None
         
-        # Second pass: if no program found, use the largest image file
-        if not program_image and available_images:
-            try:
-                image_sizes = []
+        if os.path.exists(static_images_dir):
+            # Priority: look for the specific program image first
+            program_keywords = [
+                'program origina',  # Specific program image
+                'program original',
+                'whatsapp image 2026-01-02 at 11.31.38',  # Specific program image
+                'program', 'programme', 'poster', 'affiche', 
+                'ft', 'gtt', 'gsrz', 'fghft'
+            ]
+            
+            # First pass: look for specific program image or keywords
+            for filename in os.listdir(static_images_dir):
+                if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                    full_path = f'lyrics/images/{filename}'
+                    available_images.append(full_path)
+                    
+                    filename_lower = filename.lower()
+                    # Check for specific program image first
+                    if 'program origina' in filename_lower or 'program original' in filename_lower:
+                        program_image = full_path
+                    elif not program_image and 'whatsapp image 2026-01-02 at 11.31.38' in filename_lower:
+                        program_image = full_path
+                    elif not program_image and any(keyword in filename_lower for keyword in program_keywords[3:]):
+                        program_image = full_path
+            
+            # Second pass: if no program found, use first non-large image or skip size check
+            if not program_image and available_images:
+                # Skip large images (likely photos) - prefer smaller ones
+                # Just use the first image that's not obviously a photo
                 for img_path in available_images:
-                    img_file = os.path.join(static_images_dir, os.path.basename(img_path))
-                    if os.path.exists(img_file):
-                        size = os.path.getsize(img_file)
-                        image_sizes.append((size, img_path))
-                if image_sizes:
-                    image_sizes.sort(reverse=True)
-                    program_image = image_sizes[0][1]
-            except:
-                pass
+                    filename = os.path.basename(img_path).lower()
+                    # Skip obvious photo filenames
+                    if not any(photo_indicator in filename for photo_indicator in ['dsc_', 'photo', 'img_']):
+                        program_image = img_path
+                        break
+                # If still no program image, just use the first one
+                if not program_image:
+                    program_image = available_images[0]
+            
+            # Cache for 1 hour (3600 seconds)
+            cached_data = {
+                'available_images': available_images,
+                'program_image': program_image
+            }
+            cache.set(cache_key, cached_data, 3600)
+        else:
+            cached_data = {'available_images': [], 'program_image': None}
+    
+    available_images = cached_data['available_images']
+    program_image = cached_data['program_image']
     
     # Use a different image as hero background (not the program)
+    # Skip huge files (11-12MB) to avoid slow loading
+    huge_files = ['dsc_7294', 'fghft', 'ft.jpg', 'gsrz', 'gtt']
     hero_image = None
     for img in available_images:
         if img != program_image:
-            hero_image = img
-            break
+            filename = os.path.basename(img).lower()
+            # Skip huge files for hero
+            if not any(huge in filename for huge in huge_files):
+                hero_image = img
+                break
     
-    # Gallery: exclude program and hero images
-    gallery_images = [img for img in available_images if img != hero_image and img != program_image][:4]
+    # If no small image found, use first available
+    if not hero_image and available_images:
+        for img in available_images:
+            if img != program_image:
+                hero_image = img
+                break
     
-    # Slider images: exclude program image
-    slider_images = [img for img in available_images if img != program_image]
+    # Gallery: exclude program and hero images, skip huge files
+    gallery_images = []
+    for img in available_images:
+        if img != hero_image and img != program_image:
+            filename = os.path.basename(img).lower()
+            # Skip huge files for gallery
+            if not any(huge in filename for huge in huge_files):
+                gallery_images.append(img)
+                if len(gallery_images) >= 4:
+                    break
+    
+    # Slider images: exclude program image and huge files
+    slider_images = []
+    for img in available_images:
+        if img != program_image:
+            filename = os.path.basename(img).lower()
+            # Skip huge files for slider (they're too big to load quickly)
+            if not any(huge in filename for huge in huge_files):
+                slider_images.append(img)
     
     # Get the full URL for QR code generation (will be done client-side)
     # QR code should point to the songs list page
@@ -199,51 +243,34 @@ def program_view(request):
     """
     import os
     import json
+    from django.core.cache import cache
     from django.conf import settings
     from django.http import Http404
     
-    static_images_dir = os.path.join(settings.BASE_DIR, 'lyrics', 'static', 'lyrics', 'images')
-    program_image = None
-    program_text = None
+    # Use cached image data from setlist_view
+    cache_key = 'setlist_images'
+    cached_data = cache.get(cache_key)
     
-    if os.path.exists(static_images_dir):
-        # Look for the specific program image first
-        for filename in os.listdir(static_images_dir):
-            filename_lower = filename.lower()
-            if filename_lower.endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                # Check for specific program image - priority to "Program Origina"
-                if 'program origina' in filename_lower or 'program original' in filename_lower:
-                    program_image = f'lyrics/images/{filename}'
-                    break
-                elif 'whatsapp image 2026-01-02 at 11.31.38' in filename_lower:
-                    program_image = f'lyrics/images/{filename}'
-                    break
+    if cached_data:
+        program_image = cached_data.get('program_image')
+    else:
+        # Fallback: quick scan if cache miss
+        static_images_dir = os.path.join(settings.BASE_DIR, 'lyrics', 'static', 'lyrics', 'images')
+        program_image = None
         
-        # If not found, try other keywords
-        if not program_image:
-            program_keywords = ['program', 'programme', 'poster', 'affiche', 'ft', 'gtt', 'gsrz', 'fghft']
+        if os.path.exists(static_images_dir):
+            # Quick scan for program image
             for filename in os.listdir(static_images_dir):
                 filename_lower = filename.lower()
                 if filename_lower.endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                    if any(keyword in filename_lower for keyword in program_keywords):
+                    if 'program origina' in filename_lower or 'program original' in filename_lower:
                         program_image = f'lyrics/images/{filename}'
                         break
-        
-        # If still not found, use largest file
-        if not program_image:
-            try:
-                image_files = []
-                for filename in os.listdir(static_images_dir):
-                    if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                        img_file = os.path.join(static_images_dir, filename)
-                        if os.path.exists(img_file):
-                            size = os.path.getsize(img_file)
-                            image_files.append((size, f'lyrics/images/{filename}'))
-                if image_files:
-                    image_files.sort(reverse=True)
-                    program_image = image_files[0][1]
-            except:
-                pass
+                    elif 'whatsapp image 2026-01-02 at 11.31.38' in filename_lower:
+                        program_image = f'lyrics/images/{filename}'
+                        break
+    
+    program_text = None
     
     # Try to load extracted text
     program_text_file = os.path.join(settings.BASE_DIR, 'lyrics', 'static', 'lyrics', 'program_text.json')
