@@ -679,16 +679,18 @@
         .partner-item {
             flex-shrink: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 32px;
+            padding: 24px 32px;
             background-color: var(--card);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
-            min-width: 200px;
-            height: 80px;
+            min-width: 240px;
+            height: auto;
+            min-height: 100px;
         }
 
         .partner-item:hover {
@@ -699,16 +701,30 @@
         }
 
         .partner-name {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: var(--foreground);
             text-align: center;
-            white-space: nowrap;
-            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+            letter-spacing: 0.01em;
+            line-height: 1.3;
+        }
+
+        .partner-role {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--muted-foreground);
+            text-align: center;
+            line-height: 1.4;
+            max-width: 220px;
         }
 
         .partner-item:hover .partner-name {
             color: var(--primary);
+        }
+
+        .partner-item:hover .partner-role {
+            color: var(--foreground);
         }
 
         @keyframes scroll-sponsors {
@@ -742,13 +758,19 @@
             }
             
             .partner-item {
-                min-width: 160px;
-                height: 70px;
-                padding: 16px 24px;
+                min-width: 180px;
+                min-height: 90px;
+                padding: 20px 24px;
             }
             
             .partner-name {
-                font-size: 15px;
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+            
+            .partner-role {
+                font-size: 13px;
+                max-width: 160px;
             }
         }
         
@@ -762,13 +784,19 @@
             }
             
             .partner-item {
-                min-width: 140px;
-                height: 65px;
-                padding: 14px 20px;
+                min-width: 160px;
+                min-height: 85px;
+                padding: 18px 20px;
             }
             
             .partner-name {
-                font-size: 14px;
+                font-size: 15px;
+                margin-bottom: 5px;
+            }
+            
+            .partner-role {
+                font-size: 12px;
+                max-width: 140px;
             }
         }
     </style>
@@ -844,12 +872,18 @@
                         {% for partner in partners %}
                         <div class="partner-item">
                             <div class="partner-name">{{ partner.name }}</div>
+                            {% if partner.role %}
+                            <div class="partner-role">{{ partner.role }}</div>
+                            {% endif %}
                         </div>
                         {% endfor %}
                         <!-- Duplicate for seamless loop -->
                         {% for partner in partners %}
                         <div class="partner-item">
                             <div class="partner-name">{{ partner.name }}</div>
+                            {% if partner.role %}
+                            <div class="partner-role">{{ partner.role }}</div>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     </div>

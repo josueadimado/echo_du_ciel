@@ -85,20 +85,80 @@ def setlist_view(request):
     page_url = f"{request_scheme}://{request_host}{reverse('songs_list')}"
     
     # Partners/Sponsors list - names of people and organizations that supported the concert
-    # You can customize this list with actual names
+    # Format: {'name': 'Name', 'role': 'Role/Activity'}
     partners = [
-        {'name': 'Famille Kouassi'},
-        {'name': 'Église Baptiste de Cocody'},
-        {'name': 'M. Jean-Pierre Adou'},
-        {'name': 'Mme Marie-Claire Bamba'},
-        {'name': 'Association des Amis de la Chorale'},
-        {'name': 'M. Paul Kouamé'},
-        {'name': 'Mme Sophie Traoré'},
-        {'name': 'Entreprise ABC Services'},
-        {'name': 'M. David N\'Guessan'},
-        {'name': 'Mme Awa Diallo'},
-        {'name': 'Famille Koné'},
-        {'name': 'Restaurant Le Bon Goût'},
+        {
+            'name': 'Mr ADIMADO Kossi Aimé',
+            'role': 'Directeur ECADIF SARL U Spécialisé dans la Vente de moto et pieces detachees d\'Evame et Apsonic'
+        },
+        {
+            'name': 'Mr Magloire',
+            'role': 'Directeur Evame Togo'
+        },
+        {
+            'name': 'Mr AFOUTOU Komi',
+            'role': 'Directeur Commercial ECADIF SARL U'
+        },
+        {
+            'name': 'ADIMADO Kodzo Josue',
+            'role': 'Responsable IT & Gestion des Stocks, ECADIF Sarl U · Fondateur, The Creative Branders Ltd'
+        },
+        {
+            'name': 'ADIMADO Makafui',
+            'role': 'Auditeur Interne à ECADIF SARL U'
+        },
+        {
+            'name': 'AFFO Cedric',
+            'role': 'Auditeur a GCAS'
+        },
+        {
+            'name': 'AFOUTOU Akouvi',
+            'role': 'Couturière'
+        },
+        {
+            'name': 'Ahama soke',
+            'role': ''
+        },
+        {
+            'name': 'Ahama Lucrèce',
+            'role': 'Couturière'
+        },
+        {
+            'name': 'KPETEMEY kokouvi Pedro',
+            'role': 'Contrôleur'
+        },
+        {
+            'name': 'Amedjodeka Elom',
+            'role': 'Responsable RH PAM Togo'
+        },
+        {
+            'name': 'ATIVI Emmanuel',
+            'role': 'Responsable Qualité · Directeur du cabinet'
+        },
+        {
+            'name': 'Adama Olivia',
+            'role': ''
+        },
+        {
+            'name': 'AGBENOWOKO komi',
+            'role': 'Transitaire'
+        },
+        {
+            'name': 'Malonnui Adjovi',
+            'role': 'Revendeuse de pagne au grand marché'
+        },
+        {
+            'name': 'Mme Amey Bodiviane',
+            'role': 'Responsable RH'
+        },
+        {
+            'name': 'AFOGNON Bonaventure',
+            'role': 'Menuisier'
+        },
+        {
+            'name': 'Adoh Élodie',
+            'role': ''
+        },
     ]
     
     return render(request, 'lyrics/setlist.html', {
